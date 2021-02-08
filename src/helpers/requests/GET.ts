@@ -5,7 +5,7 @@ import {
 } from "../../interfaces/interfaces";
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
-import { checkHttpsAgent } from "../helpers/functions";
+import { checkHttpsAgent } from "../generic";
 
 export async function MakeGetRequest(
   path: string,
