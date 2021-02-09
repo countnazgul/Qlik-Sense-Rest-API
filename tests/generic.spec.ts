@@ -10,6 +10,7 @@ import { IConfig } from "../src/interfaces/interfaces";
 
 import {
   QlikEngineClient,
+  QlikGenericRestClient,
   QlikProxyClient,
   QlikRepositoryClient,
 } from "../src/index";
@@ -151,6 +152,18 @@ describe("PLAYGROUND", function () {
       // let result = await repo
       //   .Get("v1/apps/4a13cc60-d380-4776-a96b-82301e5a03d0")
       // .catch((e) => {
+      let a = 1;
+    });
+
+    let a = 1;
+  });
+
+  it("Test GET Generic (Header)", async function () {
+    let localConfig = { ...baseConfigHeader };
+    // let localConfig = { ...baseConfig };
+    delete localConfig.port;
+    let repo = new QlikGenericRestClient(localConfig);
+    let result = await repo.Get("api/engine/healthcheck").catch((e) => {
       let a = 1;
     });
 

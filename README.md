@@ -1,14 +1,43 @@
-Interact with various Qlik Sense REST APIs (like Repository, Proxy, Engine and SaaS edition)
+## Qlik Sense REST API (Node/JavaScript)
+
+Interact with Qlik Sense REST APIs (Repository, Proxy, Engine and SaaS) from a single package
 
 Lot to be done!
 
 ---
 
-**Any "physical" content (like certificates, qvf files, extensions etc)
-have to be provided in advance.**
-The package communicates with Qlik only and should not read files from the file system. Its not its job ... and make life easier when the package is used in the browser
+## Motivation
 
-## Examples:
+The short answer ... I needed it :D
+
+Long(er) answer:
+
+- communicate with multiple QS REST API services (not limited only to a single service) from single package
+- support multiple authentication mechanisms (certificates, header, JWT etc) **The package itself is not performing authentication**
+- good project to skill up my `TypeScript`
+
+## REST API coverage
+
+- [x] Repository (QSoW)
+- [x] Proxy (QSoW)
+- [x] Engine (QSoW)
+- [x] Generic (QSoW)
+- [ ] SaaS (QSoK) (next phase)
+- [ ] Engine JSON API through REST API (not guaranteed)
+
+---
+
+## Installation
+
+TBA
+
+---
+
+**Any "physical" content (like certificates, qvf files, extension files etc)
+have to be provided in advance.**
+The package communicates with Qlik only and should not read files from the file system. Its not its job ... and make life easier when the package is used in the browser ;)
+
+## Examples
 
 - Certificates authentication
 
@@ -108,3 +137,38 @@ let config = {
 let engineClient = new QlikProxyClient(config);
 let result = await engineClient.Get("engine/healthcheck");
 ```
+
+- Generic REST client - all other clients are adding the required service prefix automatically (for example `qrs`, `qps` and `api`). Some other REST request dont need prefix. In these cases the `Generic REST client` can be used. In general this client can be used as replacement for all other clients by adding the necessary prefix to the url
+
+```javascript
+import { QlikGenericRestClient } from "../src/index";
+
+const pfx = fs.readFileSync("path/to/client.pfx");
+
+let config = {
+  host: "my-sense-host",
+  port: 4747,
+  authentication: {
+    pfx: pfx,
+    user_dir: "SOME_DIR",
+    user_name: "SOME_USER",
+  },
+};
+
+let genericClient = new QlikGenericRestClient(config);
+let result = await genericClient.Get("engine/healthcheck");
+```
+
+---
+
+## Supported authentication methods
+
+**This package is not performing authentication by itself!**
+
+- [x] Certificates
+- [x] Header
+- [ ] JWT
+- [ ] Session
+- [ ] Ticket
+
+---
