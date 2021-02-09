@@ -6,7 +6,7 @@ import fs from "fs";
 import chai from "chai";
 const expect = chai.expect;
 
-import { IConfig } from "../src/interfaces/interfaces";
+import { IConfig, ISessionConfig } from "../src/interfaces/interfaces";
 
 import {
   QlikEngineClient,
@@ -47,6 +47,14 @@ let baseConfigJWT: IConfig = {
   proxy: process.env.AUTH_JWT_PROXY,
   authentication: {
     token: process.env.AUTH_JWT_TOKEN,
+  },
+};
+
+let baseConfigSession: IConfig = {
+  host: process.env.TEST_HOST,
+  authentication: {
+    sessionId: "",
+    cookieHeaderName: "X-Qlik-Session",
   },
 };
 
@@ -139,8 +147,8 @@ describe("PLAYGROUND", function () {
     let repo = new QlikProxyClient(localConfig);
     let result = await repo
       .Post("session", {
-        userDirectory: "SENSE-NOV-2020",
-        userId: "vagrant",
+        userDirectory: process.env.SENSE_USER_DIRECTORY,
+        userId: process.env.SENSE_USER_NAME,
         sessionId: generateUUID(),
       })
       .catch((e) => {
@@ -182,6 +190,30 @@ describe("PLAYGROUND", function () {
     let localConfig = { ...baseConfigJWT };
     // let localConfig = { ...baseConfig };
     delete localConfig.port;
+    let repo = new QlikRepositoryClient(localConfig);
+    let result = await repo.Get("about").catch((e) => {
+      let a = 1;
+    });
+
+    let a = 1;
+  });
+
+  it("Test GET Repository (SessionID)", async function () {
+    let sessionID = generateUUID();
+    let proxyConfig = { ...baseConfig };
+    proxyConfig.port = 4243;
+
+    let proxy = new QlikProxyClient(proxyConfig);
+
+    let proxyResult = await proxy.Post("session", {
+      userDirectory: process.env.SENSE_USER_DIRECTORY,
+      userId: process.env.SENSE_USER_NAME,
+      sessionId: sessionID,
+    });
+
+    let localConfig = { ...baseConfigSession };
+    (localConfig.authentication as ISessionConfig).sessionId = sessionID;
+
     let repo = new QlikRepositoryClient(localConfig);
     let result = await repo.Get("about").catch((e) => {
       let a = 1;

@@ -4,11 +4,17 @@ import {
   ICertPfxConfig,
   IHeaderConfig,
   IJWTConfig,
+  ISessionConfig,
 } from "../interfaces/interfaces";
 import https from "https";
 
 export function generateHttpsAgent(
-  authentication: ICertCrtConfig | ICertPfxConfig | IHeaderConfig | IJWTConfig,
+  authentication:
+    | ICertCrtConfig
+    | ICertPfxConfig
+    | IHeaderConfig
+    | IJWTConfig
+    | ISessionConfig,
   isCert?: Boolean
 ): AxiosRequestConfig["httpAgent"] {
   if (isCert) {
