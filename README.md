@@ -22,7 +22,7 @@ const pfx = fs.readFileSync("path/to/client.pfx");
 
 let config = {
   host: "my-sense-host",
-  port: "4242",
+  port: 4242,
   authentication: {
     cert: crt,
     key: key,
@@ -63,6 +63,48 @@ let config = {
 
 let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
+```
+
+- Proxy API
+
+```javascript
+import { QlikProxyClient } from "../src/index";
+
+const pfx = fs.readFileSync("path/to/client.pfx");
+
+let config = {
+  host: "my-sense-host",
+  port: 4243,
+  authentication: {
+    pfx: pfx,
+    user_dir: "SOME_DIR",
+    user_name: "SOME_USER",
+  },
+};
+
+let proxyClient = new QlikProxyClient(config);
+let result = await proxyClient.Get("session");
 
 console.log(result.data.buildVersion);
+```
+
+- Engine API
+
+```javascript
+import { QlikEngineClient } from "../src/index";
+
+const pfx = fs.readFileSync("path/to/client.pfx");
+
+let config = {
+  host: "my-sense-host",
+  port: 4747,
+  authentication: {
+    pfx: pfx,
+    user_dir: "SOME_DIR",
+    user_name: "SOME_USER",
+  },
+};
+
+let engineClient = new QlikProxyClient(config);
+let result = await engineClient.Get("engine/healthcheck");
 ```

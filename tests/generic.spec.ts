@@ -142,17 +142,17 @@ describe("PLAYGROUND", function () {
   });
 
   it("Test GET Engine (Header)", async function () {
-    // let localConfig = { ...baseConfigHeader };
-    let localConfig = { ...baseConfig };
+    let localConfig = { ...baseConfigHeader };
+    // let localConfig = { ...baseConfig };
     delete localConfig.port;
-    localConfig.port = 4747;
+    // localConfig.port = 4747;
     let repo = new QlikEngineClient(localConfig);
-    // let result = await repo.Get("engine/healthcheck").catch((e) => {
-    let result = await repo
-      .Get("v1/apps/4a13cc60-d380-4776-a96b-82301e5a03d0")
-      .catch((e) => {
-        let a = 1;
-      });
+    let result = await repo.Get("engine/healthcheck").catch((e) => {
+      // let result = await repo
+      //   .Get("v1/apps/4a13cc60-d380-4776-a96b-82301e5a03d0")
+      // .catch((e) => {
+      let a = 1;
+    });
 
     let a = 1;
   });
