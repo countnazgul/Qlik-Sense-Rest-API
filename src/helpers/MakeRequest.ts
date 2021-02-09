@@ -3,6 +3,7 @@ import {
   ICertCrtConfig,
   ICertPfxConfig,
   IHeaderConfig,
+  IJWTConfig,
   IHttpReturn,
 } from "../interfaces/interfaces";
 
@@ -48,6 +49,16 @@ export class MakeRequest {
       let headerName = (this.configFull.authentication as IHeaderConfig).header;
       let user = (this.configFull.authentication as IHeaderConfig).user;
       this.requestConfig.headers[headerName] = user;
+      this.requestConfig.httpsAgent = generateHttpsAgent(
+        this.configFull.authentication,
+        false
+      );
+    }
+
+    // if JWT authentication
+    if ((this.configFull.authentication as IJWTConfig).token) {
+      let token = (this.configFull.authentication as IJWTConfig).token;
+      this.requestConfig.headers["Authorization"] = `Bearer ${token}`;
       this.requestConfig.httpsAgent = generateHttpsAgent(
         this.configFull.authentication,
         false

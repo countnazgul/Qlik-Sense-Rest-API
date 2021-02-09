@@ -7,7 +7,9 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "cSpell.words": [
-        "healthcheck"
+        "IJWT",
+        "healthcheck",
+        "yxxx"
     ],
     "editor.tokenColorCustomizations": {
         "textMateRules": [
