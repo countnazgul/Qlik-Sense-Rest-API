@@ -22,7 +22,7 @@ export interface IHeaderConfig {
 
 export interface IConfig {
   host: string;
-  port?: string;
+  port?: number;
   proxy?: string;
   notSecure?: boolean;
   headers?: string[];

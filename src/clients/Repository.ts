@@ -16,11 +16,11 @@ export class QlikRepositoryClient extends QlikClient {
   }
 
   Get(path: string, contentType = "application/json"): Promise<IHttpReturn> {
-    return super.Get(this.getFinalUrl(path), contentType);
+    return super.Get(`${this.configFull.baseUrl}/${path}`, contentType);
   }
 
   Delete(path: string, contentType = "application/json") {
-    return super.Delete(this.getFinalUrl(path), contentType);
+    return super.Delete(`${this.configFull.baseUrl}/${path}`, contentType);
   }
 
   Patch(
@@ -28,7 +28,7 @@ export class QlikRepositoryClient extends QlikClient {
     data: object,
     contentType = "application/json"
   ): Promise<IHttpReturn> {
-    return super.Post(this.getFinalUrl(path), data, contentType);
+    return super.Post(`${this.configFull.baseUrl}/${path}`, data, contentType);
   }
 
   Post(
@@ -36,7 +36,7 @@ export class QlikRepositoryClient extends QlikClient {
     data: object,
     contentType = "application/json"
   ): Promise<IHttpReturn> {
-    return super.Post(this.getFinalUrl(path), data, contentType);
+    return super.Post(`${this.configFull.baseUrl}/${path}`, data, contentType);
   }
 
   Put(
@@ -44,10 +44,6 @@ export class QlikRepositoryClient extends QlikClient {
     data: object,
     contentType = "application/json"
   ): Promise<IHttpReturn> {
-    return super.Put(this.getFinalUrl(path), data, contentType);
-  }
-
-  private getFinalUrl(path: string) {
-    return `${this.configFull.baseUrl}/${path}`;
+    return super.Put(`${this.configFull.baseUrl}/${path}`, data, contentType);
   }
 }

@@ -6,7 +6,9 @@
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "cSpell.words": [],
+    "cSpell.words": [
+        "healthcheck"
+    ],
     "editor.tokenColorCustomizations": {
         "textMateRules": [
             {

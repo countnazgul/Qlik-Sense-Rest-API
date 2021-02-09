@@ -1,22 +1,35 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { ICertCrtConfig, ICertPfxConfig } from "../interfaces/interfaces";
+import { AxiosRequestConfig } from "axios";
+import {
+  ICertCrtConfig,
+  ICertPfxConfig,
+  IHeaderConfig,
+} from "../interfaces/interfaces";
 import https from "https";
 
 export function generateHttpsAgent(
-  authentication: ICertCrtConfig | ICertPfxConfig
+  authentication: ICertCrtConfig | ICertPfxConfig | IHeaderConfig,
+  isCert?: Boolean
 ): AxiosRequestConfig["httpAgent"] {
-  if ((authentication as ICertCrtConfig).cert) {
-    return new https.Agent({
-      rejectUnauthorized: false,
-      cert: (authentication as ICertCrtConfig).cert,
-      key: (authentication as ICertCrtConfig).key,
-    });
-  }
+  if (isCert) {
+    if ((authentication as ICertCrtConfig).cert) {
+      return new https.Agent({
+        rejectUnauthorized: false,
+        cert: (authentication as ICertCrtConfig).cert,
+        key: (authentication as ICertCrtConfig).key,
+      });
+    }
 
-  if ((authentication as ICertPfxConfig).pfx) {
+    if ((authentication as ICertPfxConfig).pfx) {
+      return new https.Agent({
+        rejectUnauthorized: false,
+        pfx: (authentication as ICertPfxConfig).pfx,
+      });
+    }
+  }
+  // when no cert authentication then only ignore the cert warning
+  if (!isCert) {
     return new https.Agent({
       rejectUnauthorized: false,
-      pfx: (authentication as ICertPfxConfig).pfx,
     });
   }
 
@@ -26,7 +39,16 @@ export function generateHttpsAgent(
 export function generateQlikUserHeader(
   config: ICertCrtConfig | ICertPfxConfig
 ): string {
-  return `UserDirectory=${config.user_dir};UserId=${config.user_name}`;
+  if (config.user_dir && config.user_name)
+    return `UserDirectory=${config.user_dir};UserId=${config.user_name}`;
+
+  if (!config.user_dir || !config.user_name)
+    throw new Error("Please provide user name and directory");
+
+  // user and user directory should always be provided by the consumer logic
+  // dont want to use any default values for it. Change my mind?
+  if (!config.user_dir && !config.user_name)
+    throw new Error("Please provide user name and directory");
 }
 
 export function generateXrfkey(): string {
@@ -67,11 +89,9 @@ export function setURLXrfKey(url: string, xrfKey: string) {
 // };
 
 export function generateUUID(): string {
-  // @ts-ignore
-  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-    (
-      c ^
-      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-    ).toString(16)
-  );
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }

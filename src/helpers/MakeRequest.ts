@@ -2,6 +2,7 @@ import {
   IConfigFull,
   ICertCrtConfig,
   ICertPfxConfig,
+  IHeaderConfig,
   IHttpReturn,
 } from "../interfaces/interfaces";
 
@@ -37,7 +38,19 @@ export class MakeRequest {
       (this.configFull.authentication as ICertPfxConfig).pfx
     ) {
       this.requestConfig.httpsAgent = generateHttpsAgent(
-        this.configFull.authentication as any
+        this.configFull.authentication as any,
+        true
+      );
+    }
+
+    // if header authentication
+    if ((this.configFull.authentication as IHeaderConfig).header) {
+      let headerName = (this.configFull.authentication as IHeaderConfig).header;
+      let user = (this.configFull.authentication as IHeaderConfig).user;
+      this.requestConfig.headers[headerName] = user;
+      this.requestConfig.httpsAgent = generateHttpsAgent(
+        this.configFull.authentication,
+        false
       );
     }
 
@@ -104,7 +117,7 @@ export class MakeRequest {
       });
   }
 
-  async Post(data: object): Promise<IHttpReturn> {
+  async Post(data: object | BinaryType): Promise<IHttpReturn> {
     this.requestConfig.method = "POST";
     this.requestConfig.data = data;
 

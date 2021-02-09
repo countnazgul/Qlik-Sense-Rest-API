@@ -1,4 +1,4 @@
-import { IConfig, IConfigFull } from "../interfaces/interfaces";
+import { IConfig, IConfigFull, IHttpReturn } from "../interfaces/interfaces";
 import { QlikClient } from "./BaseClient";
 
 export class QlikProxyClient extends QlikClient {
@@ -13,5 +13,37 @@ export class QlikProxyClient extends QlikClient {
     };
 
     super(configFull);
+  }
+
+  Get(path: string, contentType = "application/json"): Promise<IHttpReturn> {
+    return super.Get(`${this.configFull.baseUrl}/${path}`, contentType);
+  }
+
+  Delete(path: string, contentType = "application/json") {
+    return super.Delete(`${this.configFull.baseUrl}/${path}`, contentType);
+  }
+
+  Patch(
+    path: string,
+    data: object,
+    contentType = "application/json"
+  ): Promise<IHttpReturn> {
+    return super.Post(`${this.configFull.baseUrl}/${path}`, data, contentType);
+  }
+
+  Post(
+    path: string,
+    data: object,
+    contentType = "application/json"
+  ): Promise<IHttpReturn> {
+    return super.Post(`${this.configFull.baseUrl}/${path}`, data, contentType);
+  }
+
+  Put(
+    path: string,
+    data: object,
+    contentType = "application/json"
+  ): Promise<IHttpReturn> {
+    return super.Put(`${this.configFull.baseUrl}/${path}`, data, contentType);
   }
 }

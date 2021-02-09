@@ -8,16 +8,20 @@ const expect = chai.expect;
 
 import { IConfig } from "../src/interfaces/interfaces";
 
-import { QlikRepositoryClient } from "../src/index";
-// import { generateUUID } from "../src/helpers/generic";
+import {
+  QlikEngineClient,
+  QlikProxyClient,
+  QlikRepositoryClient,
+} from "../src/index";
+import { generateUUID } from "../src/helpers/generic";
 
 const crt = fs.readFileSync(`${process.env.TEST_CERT}/client.pem`);
 const key = fs.readFileSync(`${process.env.TEST_CERT}/client_key.pem`);
 const pfx = fs.readFileSync(`${process.env.TEST_CERT}/client.pfx`);
 
-let baseConfig = {
+let baseConfig: IConfig = {
   host: process.env.TEST_HOST,
-  port: "4242",
+  port: 4242,
   //   proxy: "blah",
   authentication: {
     // cert: crt,
@@ -25,6 +29,15 @@ let baseConfig = {
     pfx: pfx,
     user_dir: process.env.SENSE_USER_DIRECTORY,
     user_name: process.env.SENSE_USER_NAME,
+  },
+};
+
+let baseConfigHeader: IConfig = {
+  host: process.env.TEST_HOST,
+  proxy: process.env.AUTH_HEADER_PROXY,
+  authentication: {
+    header: process.env.AUTH_HEADER,
+    user: process.env.AUTH_HEADER_USER,
   },
 };
 
@@ -71,6 +84,72 @@ describe("PLAYGROUND", function () {
 
     let deleteTag = await repo
       .Delete(`tag/${(newTag as any).data.id}`)
+      .catch((e) => {
+        let a = 1;
+      });
+
+    let a = 1;
+  });
+
+  it("Test GET (Header)", async function () {
+    let repo = new QlikRepositoryClient(baseConfigHeader);
+    let result = await repo.Get("about").catch((e) => {
+      let a = 1;
+    });
+
+    let a = 1;
+  });
+
+  it("Test GET Proxy (Certificates)", async function () {
+    let localConfig = { ...baseConfig };
+    localConfig.port = 4243;
+    let repo = new QlikProxyClient(localConfig);
+    let result = await repo.Get("session").catch((e) => {
+      let a = 1;
+    });
+
+    let a = 1;
+  });
+
+  it("Test DELETE Proxy (Certificates)", async function () {
+    let localConfig = { ...baseConfig };
+    localConfig.port = 4243;
+    let repo = new QlikProxyClient(localConfig);
+    let result = await repo
+      .Delete(`session/1e28fa60-900d-414a-9cf0-68db9d5e3893`)
+      .catch((e) => {
+        let a = 1;
+      });
+
+    let a = 1;
+  });
+
+  it("Test POST Proxy (Certificates)", async function () {
+    let localConfig = { ...baseConfig };
+    localConfig.port = 4243;
+    let repo = new QlikProxyClient(localConfig);
+    let result = await repo
+      .Post("session", {
+        userDirectory: "SENSE-NOV-2020",
+        userId: "vagrant",
+        sessionId: generateUUID(),
+      })
+      .catch((e) => {
+        let a = 1;
+      });
+
+    let a = 1;
+  });
+
+  it("Test GET Engine (Header)", async function () {
+    // let localConfig = { ...baseConfigHeader };
+    let localConfig = { ...baseConfig };
+    delete localConfig.port;
+    localConfig.port = 4747;
+    let repo = new QlikEngineClient(localConfig);
+    // let result = await repo.Get("engine/healthcheck").catch((e) => {
+    let result = await repo
+      .Get("v1/apps/4a13cc60-d380-4776-a96b-82301e5a03d0")
       .catch((e) => {
         let a = 1;
       });
