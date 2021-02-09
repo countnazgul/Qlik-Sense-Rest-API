@@ -6,7 +6,7 @@ Lot to be done!
 
 **Any "physical" content (like certificates, qvf files, extensions etc)
 have to be provided in advance.**
-The package communicates with Qlik only and should not read files from the file system. Its not its job ... and make life easier of the package is used in the browser
+The package communicates with Qlik only and should not read files from the file system. Its not its job ... and make life easier when the package is used in the browser
 
 ```javascript
 // certificates authentication example
