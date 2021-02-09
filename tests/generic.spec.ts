@@ -42,6 +42,14 @@ let baseConfigHeader: IConfig = {
   },
 };
 
+let baseConfigJWT: IConfig = {
+  host: process.env.TEST_HOST,
+  proxy: process.env.AUTH_JWT_PROXY,
+  authentication: {
+    token: process.env.AUTH_JWT_TOKEN,
+  },
+};
+
 describe("PLAYGROUND", function () {
   it("Test GET", async function () {
     let repo = new QlikRepositoryClient(baseConfig);
@@ -164,6 +172,18 @@ describe("PLAYGROUND", function () {
     delete localConfig.port;
     let repo = new QlikGenericRestClient(localConfig);
     let result = await repo.Get("api/engine/healthcheck").catch((e) => {
+      let a = 1;
+    });
+
+    let a = 1;
+  });
+
+  it("Test GET Repository (JWT)", async function () {
+    let localConfig = { ...baseConfigJWT };
+    // let localConfig = { ...baseConfig };
+    delete localConfig.port;
+    let repo = new QlikRepositoryClient(localConfig);
+    let result = await repo.Get("about").catch((e) => {
       let a = 1;
     });
 

@@ -20,6 +20,10 @@ export interface IHeaderConfig {
   user: string;
 }
 
+export interface IJWTConfig {
+  token: string;
+}
+
 export interface IConfig {
   host: string;
   port?: number;
@@ -27,7 +31,7 @@ export interface IConfig {
   notSecure?: boolean;
   headers?: string[];
   cookies?: string[];
-  authentication: ICertCrtConfig | ICertPfxConfig | IHeaderConfig;
+  authentication: ICertCrtConfig | ICertPfxConfig | IHeaderConfig | IJWTConfig;
 }
 
 export interface IConfigFull extends IConfig {
