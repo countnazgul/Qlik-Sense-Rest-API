@@ -1,5 +1,7 @@
 //   user?: `${string}\\${string}`;
 
+import { AxiosResponse } from "axios";
+
 export interface ICertCrtConfig {
   cert: string | Buffer;
   key: string | Buffer;
@@ -30,4 +32,10 @@ export interface IConfig {
 
 export interface IConfigFull extends IConfig {
   baseUrl: string;
+}
+
+export interface IHttpReturn {
+  status: number;
+  statusText: string;
+  data: AxiosResponse<any>["data"];
 }

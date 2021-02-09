@@ -1,4 +1,4 @@
-import { IConfig, IConfigFull } from "../interfaces/interfaces";
+import { IConfig, IConfigFull, IHttpReturn } from "../interfaces/interfaces";
 import { QlikClient } from "./BaseClient";
 
 export class QlikRepositoryClient extends QlikClient {
@@ -15,24 +15,36 @@ export class QlikRepositoryClient extends QlikClient {
     super(configFull);
   }
 
-  Get(path: string) {
-    return super.Get(this.getFinalUrl(path));
+  Get(path: string, contentType = "application/json"): Promise<IHttpReturn> {
+    return super.Get(this.getFinalUrl(path), contentType);
   }
 
-  Post() {
-    super.Post();
+  Delete(path: string, contentType = "application/json") {
+    return super.Delete(this.getFinalUrl(path), contentType);
   }
 
-  Put() {
-    super.Put();
+  Patch(
+    path: string,
+    data: object,
+    contentType = "application/json"
+  ): Promise<IHttpReturn> {
+    return super.Post(this.getFinalUrl(path), data, contentType);
   }
 
-  Delete() {
-    super.Delete();
+  Post(
+    path: string,
+    data: object,
+    contentType = "application/json"
+  ): Promise<IHttpReturn> {
+    return super.Post(this.getFinalUrl(path), data, contentType);
   }
 
-  Patch() {
-    super.Patch();
+  Put(
+    path: string,
+    data: object,
+    contentType = "application/json"
+  ): Promise<IHttpReturn> {
+    return super.Put(this.getFinalUrl(path), data, contentType);
   }
 
   private getFinalUrl(path: string) {
