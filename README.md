@@ -28,7 +28,7 @@ let config = {
 
 // this is where the magic is happening
 let repoClient = new QlikRepositoryClient(config);
-let result = await repo.Get("about");
+let result = await repoClient.Get("about");
 
 // result variable is in format:
 // {
