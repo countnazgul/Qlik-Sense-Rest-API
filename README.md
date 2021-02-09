@@ -112,6 +112,25 @@ let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
 ```
 
+- Session authentication
+
+```javascript
+// Session authentication
+import { QlikRepositoryClient } from "../src/index";
+
+let config = {
+  host: "my-sense-host",
+  proxy: "jwt-proxy-prefix",
+  authentication: {
+    sessionId: "xxxxxxxx-xxx-xxx-xxxx-xxxxxxxxxxxx",
+    cookieHeaderName: "X-Qlik-Session", // whatever is set in the virtual proxy
+  },
+};
+
+let repoClient = new QlikRepositoryClient(config);
+let result = await repoClient.Get("about");
+```
+
 - Proxy API
 
 ```javascript
@@ -186,7 +205,7 @@ let result = await genericClient.Get("engine/healthcheck");
 - [x] Certificates
 - [x] Header
 - [x] JWT
-- [ ] Session
+- [x] Session
 - [ ] Ticket
 
 ---

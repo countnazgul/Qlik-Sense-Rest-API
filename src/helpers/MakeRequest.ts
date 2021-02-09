@@ -4,6 +4,7 @@ import {
   ICertPfxConfig,
   IHeaderConfig,
   IJWTConfig,
+  ISessionConfig,
   IHttpReturn,
 } from "../interfaces/interfaces";
 
@@ -33,44 +34,11 @@ export class MakeRequest {
       },
     };
 
-    // if certificates authentication
-    if (
-      (this.configFull.authentication as ICertCrtConfig).cert ||
-      (this.configFull.authentication as ICertPfxConfig).pfx
-    ) {
-      this.requestConfig.httpsAgent = generateHttpsAgent(
-        this.configFull.authentication as any,
-        true
-      );
-    }
-
-    // if header authentication
-    if ((this.configFull.authentication as IHeaderConfig).header) {
-      let headerName = (this.configFull.authentication as IHeaderConfig).header;
-      let user = (this.configFull.authentication as IHeaderConfig).user;
-      this.requestConfig.headers[headerName] = user;
-      this.requestConfig.httpsAgent = generateHttpsAgent(
-        this.configFull.authentication,
-        false
-      );
-    }
-
-    // if JWT authentication
-    if ((this.configFull.authentication as IJWTConfig).token) {
-      let token = (this.configFull.authentication as IJWTConfig).token;
-      this.requestConfig.headers["Authorization"] = `Bearer ${token}`;
-      this.requestConfig.httpsAgent = generateHttpsAgent(
-        this.configFull.authentication,
-        false
-      );
-    }
-
-    // set Qlik user header in the required format
-    if ((this.configFull.authentication as any).user_name) {
-      this.requestConfig.headers["X-Qlik-User"] = generateQlikUserHeader(
-        this.configFull.authentication as ICertCrtConfig
-      );
-    }
+    this.SetCertificates();
+    this.SetHeader();
+    this.SetJWT();
+    this.SetSession();
+    this.SetUserHeader();
 
     this.xrfKey = generateXrfkey();
     this.requestConfig.headers["X-Qlik-Xrfkey"] = this.xrfKey;
@@ -160,5 +128,69 @@ export class MakeRequest {
           data: response.data,
         };
       });
+  }
+
+  private SetCertificates() {
+    // if certificates authentication
+    if (
+      (this.configFull.authentication as ICertCrtConfig).cert ||
+      (this.configFull.authentication as ICertPfxConfig).pfx
+    ) {
+      this.requestConfig.httpsAgent = generateHttpsAgent(
+        this.configFull.authentication as ICertCrtConfig | ICertPfxConfig,
+        true
+      );
+    }
+  }
+
+  private SetHeader() {
+    // if header authentication
+    if ((this.configFull.authentication as IHeaderConfig).header) {
+      let headerName = (this.configFull.authentication as IHeaderConfig).header;
+      let user = (this.configFull.authentication as IHeaderConfig).user;
+      this.requestConfig.headers[headerName] = user;
+      this.requestConfig.httpsAgent = generateHttpsAgent(
+        this.configFull.authentication,
+        false
+      );
+    }
+  }
+
+  private SetJWT() {
+    // if JWT authentication
+    if ((this.configFull.authentication as IJWTConfig).token) {
+      let token = (this.configFull.authentication as IJWTConfig).token;
+      this.requestConfig.headers["Authorization"] = `Bearer ${token}`;
+      this.requestConfig.httpsAgent = generateHttpsAgent(
+        this.configFull.authentication,
+        false
+      );
+    }
+  }
+
+  private SetSession() {
+    // if session authentication
+    if ((this.configFull.authentication as ISessionConfig).sessionId) {
+      let sessionId = (this.configFull.authentication as ISessionConfig)
+        .sessionId;
+      let cookieHeaderName = (this.configFull.authentication as ISessionConfig)
+        .cookieHeaderName;
+      (this.requestConfig.headers[
+        "Cookie"
+      ] = `${cookieHeaderName}=${sessionId}`),
+        (this.requestConfig.httpsAgent = generateHttpsAgent(
+          this.configFull.authentication,
+          false
+        ));
+    }
+  }
+
+  private SetUserHeader() {
+    // set Qlik user header in the required format
+    if ((this.configFull.authentication as any).user_name) {
+      this.requestConfig.headers["X-Qlik-User"] = generateQlikUserHeader(
+        this.configFull.authentication as ICertCrtConfig
+      );
+    }
   }
 }

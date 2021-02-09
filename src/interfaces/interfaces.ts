@@ -24,6 +24,11 @@ export interface IJWTConfig {
   token: string;
 }
 
+export interface ISessionConfig {
+  sessionId: string;
+  cookieHeaderName: string;
+}
+
 export interface IConfig {
   host: string;
   port?: number;
@@ -31,7 +36,12 @@ export interface IConfig {
   notSecure?: boolean;
   headers?: string[];
   cookies?: string[];
-  authentication: ICertCrtConfig | ICertPfxConfig | IHeaderConfig | IJWTConfig;
+  authentication:
+    | ICertCrtConfig
+    | ICertPfxConfig
+    | IHeaderConfig
+    | IJWTConfig
+    | ISessionConfig;
 }
 
 export interface IConfigFull extends IConfig {
