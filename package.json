@@ -1,24 +1,25 @@
 {
   "name": "qlik-rest-api",
-  "version": "0.6.0",
-  "description": "Interact with Qlik Sense REST APIs",
+  "version": "0.6.0-beta.0",
+  "description": "Interact with multiple Qlik Sense REST APIs",
   "author": {
     "email": "stefan.stoichev@gmail.com",
     "name": "Stefan Stoichev @countnazgul",
     "url": "https://sstoichev.eu"
   },
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "engines": {
     "node": ">=8"
   },
   "scripts": {
-    "test": "mocha test/**/*.spec.js",
-    "start:dev": "nodemon --inspect src/index.js",
-    "start:ts": "nodemon",
-    "build": "tsc",
-    "start": "npm run build && node build/index.js"
+    "test": "mocha tests/**/*.spec.js",
+    "build": "tsc"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "keywords": [
     "qlik",
     "sense",

@@ -14,7 +14,6 @@
         "sourceMap": true,
         "outDir": "dist",
         "declaration": true,
-        "declarationDir": "./dec",
         "baseUrl": ".",
         "paths": {
             "*": [
@@ -29,5 +28,8 @@
     },
     "include": [
         "src/**/*",
+    ],
+    "exclude": [
+        "node_modules",
     ]
 }
