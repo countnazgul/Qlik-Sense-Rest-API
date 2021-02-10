@@ -31,7 +31,7 @@ Long(er) answer:
 
 ## Installation
 
-TBA
+> `npm install qlik-rest-api@beta`
 
 ---
 
