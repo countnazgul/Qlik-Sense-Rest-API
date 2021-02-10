@@ -1,8 +1,10 @@
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T0148ZP)
+
 ## Qlik Sense REST API (Node/JavaScript)
 
 Interact with Qlik Sense REST APIs (Repository, Proxy, Engine and SaaS) from a single package
 
-Lot to be done!
+**Under development!**
 
 ---
 
@@ -131,6 +133,23 @@ let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
 ```
 
+- Ticket authentication
+
+```javascript
+// Ticket authentication
+import { QlikRepositoryClient } from "../src/index";
+
+let config = {
+  host: "my-sense-host",
+  authentication: {
+    ticket: "some-ticket-value",
+  },
+};
+
+let repoClient = new QlikRepositoryClient(config);
+let result = await repoClient.Get("about");
+```
+
 - Proxy API
 
 ```javascript
@@ -206,6 +225,8 @@ let result = await genericClient.Get("engine/healthcheck");
 - [x] Header
 - [x] JWT
 - [x] Session
-- [ ] Ticket
+- [x] Ticket
 
 ---
+
+Not affiliated with Qlik
