@@ -5,6 +5,7 @@ import {
   IHeaderConfig,
   IJWTConfig,
   ISessionConfig,
+  ITicketConfig,
   IHttpReturn,
 } from "../interfaces/interfaces";
 
@@ -15,12 +16,14 @@ import {
   generateQlikUserHeader,
   generateXrfkey,
   setURLXrfKey,
+  setQlikTicket,
 } from "../helpers/generic";
 
 export class MakeRequest {
   configFull: IConfigFull;
   requestConfig: AxiosRequestConfig;
   xrfKey: string;
+  qlikTicket: string;
 
   constructor(configFull: IConfigFull) {
     this.configFull = configFull;
@@ -39,13 +42,15 @@ export class MakeRequest {
     this.SetJWT();
     this.SetSession();
     this.SetUserHeader();
+    this.SetTicket();
 
     this.xrfKey = generateXrfkey();
     this.requestConfig.headers["X-Qlik-Xrfkey"] = this.xrfKey;
   }
 
   PrepareRequestConfig(url: string, contentType: string): void {
-    this.requestConfig.url = setURLXrfKey(url, this.xrfKey);
+    this.requestConfig.url = setQlikTicket(url, this.qlikTicket);
+    this.requestConfig.url = setURLXrfKey(this.requestConfig.url, this.xrfKey);
     this.requestConfig.headers["Content-Type"] = contentType;
   }
 
@@ -190,6 +195,20 @@ export class MakeRequest {
     if ((this.configFull.authentication as any).user_name) {
       this.requestConfig.headers["X-Qlik-User"] = generateQlikUserHeader(
         this.configFull.authentication as ICertCrtConfig
+      );
+    }
+  }
+
+  private SetTicket() {
+    // set Qlik ticket
+    if ((this.configFull.authentication as ITicketConfig).ticket) {
+      let ticket: string = (this.configFull.authentication as ITicketConfig)
+        .ticket;
+      this.qlikTicket = ticket;
+
+      this.requestConfig.httpsAgent = generateHttpsAgent(
+        this.configFull.authentication as ITicketConfig,
+        false
       );
     }
   }

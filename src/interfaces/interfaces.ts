@@ -24,6 +24,10 @@ export interface IJWTConfig {
   token: string;
 }
 
+export interface ITicketConfig {
+  ticket: string;
+}
+
 export interface ISessionConfig {
   sessionId: string;
   cookieHeaderName: string;
@@ -41,7 +45,8 @@ export interface IConfig {
     | ICertPfxConfig
     | IHeaderConfig
     | IJWTConfig
-    | ISessionConfig;
+    | ISessionConfig
+    | ITicketConfig;
 }
 
 export interface IConfigFull extends IConfig {

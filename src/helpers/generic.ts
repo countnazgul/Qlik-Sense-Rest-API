@@ -5,6 +5,7 @@ import {
   IHeaderConfig,
   IJWTConfig,
   ISessionConfig,
+  ITicketConfig,
 } from "../interfaces/interfaces";
 import https from "https";
 
@@ -14,7 +15,8 @@ export function generateHttpsAgent(
     | ICertPfxConfig
     | IHeaderConfig
     | IJWTConfig
-    | ISessionConfig,
+    | ISessionConfig
+    | ITicketConfig,
   isCert?: Boolean
 ): AxiosRequestConfig["httpAgent"] {
   if (isCert) {
@@ -73,6 +75,15 @@ export function setURLXrfKey(url: string, xrfKey: string) {
   return url.indexOf("?") > -1
     ? `${url}&xrfkey=${xrfKey}`
     : `${url}?xrfkey=${xrfKey}`;
+}
+
+export function setQlikTicket(url: string, qlikTicket: string) {
+  if (qlikTicket)
+    return url.indexOf("?") > -1
+      ? `${url}&qlikTicket=${qlikTicket}`
+      : `${url}?qlikTicket=${qlikTicket}`;
+
+  return url;
 }
 
 // check if xrfKey is passed. if not - generate it

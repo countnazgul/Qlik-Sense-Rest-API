@@ -6,7 +6,11 @@ import fs from "fs";
 import chai from "chai";
 const expect = chai.expect;
 
-import { IConfig, ISessionConfig } from "../src/interfaces/interfaces";
+import {
+  IConfig,
+  ISessionConfig,
+  ITicketConfig,
+} from "../src/interfaces/interfaces";
 
 import {
   QlikEngineClient,
@@ -55,6 +59,13 @@ let baseConfigSession: IConfig = {
   authentication: {
     sessionId: "",
     cookieHeaderName: "X-Qlik-Session",
+  },
+};
+
+let baseConfigTicket: IConfig = {
+  host: process.env.TEST_HOST,
+  authentication: {
+    ticket: "",
   },
 };
 
@@ -213,6 +224,29 @@ describe("PLAYGROUND", function () {
 
     let localConfig = { ...baseConfigSession };
     (localConfig.authentication as ISessionConfig).sessionId = sessionID;
+
+    let repo = new QlikRepositoryClient(localConfig);
+    let result = await repo.Get("about").catch((e) => {
+      let a = 1;
+    });
+
+    let a = 1;
+  });
+
+  it("Test GET Repository (Ticket)", async function () {
+    let proxyConfig = { ...baseConfig };
+    proxyConfig.port = 4243;
+
+    let proxy = new QlikProxyClient(proxyConfig);
+
+    let proxyResult = await proxy.Post("ticket", {
+      userDirectory: process.env.SENSE_USER_DIRECTORY,
+      userId: process.env.SENSE_USER_NAME,
+    });
+
+    let localConfig = { ...baseConfigTicket };
+    (localConfig.authentication as ITicketConfig).ticket =
+      proxyResult.data.Ticket;
 
     let repo = new QlikRepositoryClient(localConfig);
     let result = await repo.Get("about").catch((e) => {
