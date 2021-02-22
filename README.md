@@ -37,7 +37,7 @@ Long(er) answer:
 
 **Any "physical" content (like certificates, qvf files, extension files etc)
 have to be provided in advance.**
-The package communicates with Qlik only and should not read files from the file system. Its not its job ... and make life easier when the package is used in the browser ;)
+The package communicates with Qlik only and should not read files from the file system. Its not its job ... and make life easier when the package is used in the browser :)
 
 ## Examples
 
