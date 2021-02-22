@@ -255,4 +255,24 @@ describe("PLAYGROUND", function () {
 
     let a = 1;
   });
+
+  it("Test POST (UPLOAD)", async function () {
+    let repo = new QlikRepositoryClient(baseConfig);
+
+    let extension = fs.readFileSync(process.env.EXTENSION_PATH);
+
+    let newExtension = await repo
+      .Post(`extension/upload`, extension)
+      .catch((e) => {
+        let a = 1;
+      });
+
+    // let deleteTag = await repo
+    //   .Delete(`tag/${(newTag as any).data.id}`)
+    //   .catch((e) => {
+    //     let a = 1;
+    //   });
+
+    let a = 1;
+  });
 });

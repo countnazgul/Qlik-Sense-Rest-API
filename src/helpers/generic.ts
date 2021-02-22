@@ -86,26 +86,6 @@ export function setQlikTicket(url: string, qlikTicket: string) {
   return url;
 }
 
-// check if xrfKey is passed. if not - generate it
-// export const checkXrfKey = (index: number) => (
-//   target: any,
-//   key: string,
-//   propDesc: PropertyDescriptor
-// ) => {
-//   let originalFunction: Function = propDesc.value;
-//   propDesc.value = function () {
-//     let argValue = arguments[index];
-//     let newArgs = [];
-
-//     for (let i = 0; i < arguments.length; i++) newArgs.push(arguments[i]);
-
-//     newArgs[index] = argValue || generateXrfkey();
-
-//     return originalFunction.apply(this, newArgs);
-//   };
-//   return propDesc;
-// };
-
 export function generateUUID(): string {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,

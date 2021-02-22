@@ -9,7 +9,12 @@ import {
   IHttpReturn,
 } from "../interfaces/interfaces";
 
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  ResponseType,
+} from "axios";
 
 import {
   generateHttpsAgent,
@@ -48,10 +53,15 @@ export class MakeRequest {
     this.requestConfig.headers["X-Qlik-Xrfkey"] = this.xrfKey;
   }
 
-  PrepareRequestConfig(url: string, contentType: string): void {
+  PrepareRequestConfig(
+    url: string,
+    contentType: string,
+    responseType?: ResponseType
+  ): void {
     this.requestConfig.url = setQlikTicket(url, this.qlikTicket);
     this.requestConfig.url = setURLXrfKey(this.requestConfig.url, this.xrfKey);
     this.requestConfig.headers["Content-Type"] = contentType;
+    if (responseType) this.requestConfig.responseType = responseType;
   }
 
   async Get(): Promise<IHttpReturn> {
@@ -101,7 +111,7 @@ export class MakeRequest {
       });
   }
 
-  async Post(data: object | BinaryType): Promise<IHttpReturn> {
+  async Post(data: object | BinaryType | string | Blob): Promise<IHttpReturn> {
     this.requestConfig.method = "POST";
     this.requestConfig.data = data;
 
@@ -118,7 +128,7 @@ export class MakeRequest {
       });
   }
 
-  async Put(data: object): Promise<IHttpReturn> {
+  async Put(data: object | BinaryType | string | Blob): Promise<IHttpReturn> {
     this.requestConfig.method = "PUT";
     this.requestConfig.data = data;
 
