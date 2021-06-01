@@ -1,12 +1,13 @@
 import {
   IConfigFull,
-  ICertCrtConfig,
-  ICertPfxConfig,
+  // ICertCrtConfig,
+  // ICertPfxConfig,
   IHeaderConfig,
   IJWTConfig,
   ISessionConfig,
   ITicketConfig,
   IHttpReturn,
+  ICertUser,
 } from "../interfaces/interfaces";
 
 import axios, {
@@ -17,7 +18,7 @@ import axios, {
 } from "axios";
 
 import {
-  generateHttpsAgent,
+  // generateHttpsAgent,
   generateQlikUserHeader,
   generateXrfkey,
   setURLXrfKey,
@@ -42,7 +43,7 @@ export class MakeRequest {
       },
     };
 
-    this.SetCertificates();
+    this.SetHttpsAgent();
     this.SetHeader();
     this.SetJWT();
     this.SetSession();
@@ -145,17 +146,20 @@ export class MakeRequest {
       });
   }
 
-  private SetCertificates() {
-    // if certificates authentication
-    if (
-      (this.configFull.authentication as ICertCrtConfig).cert ||
-      (this.configFull.authentication as ICertPfxConfig).pfx
-    ) {
-      this.requestConfig.httpsAgent = generateHttpsAgent(
-        this.configFull.authentication as ICertCrtConfig | ICertPfxConfig,
-        true
-      );
-    }
+  private SetHttpsAgent() {
+    if (this.configFull.httpsAgent)
+      this.requestConfig.httpsAgent = this.configFull.httpsAgent;
+
+    // // if certificates authentication
+    // if (
+    //   (this.configFull.authentication as ICertCrtConfig).cert ||
+    //   (this.configFull.authentication as ICertPfxConfig).pfx
+    // ) {
+    //   this.requestConfig.httpsAgent = generateHttpsAgent(
+    //     this.configFull.authentication as ICertCrtConfig | ICertPfxConfig,
+    //     true
+    //   );
+    // }
   }
 
   private SetHeader() {
@@ -164,10 +168,10 @@ export class MakeRequest {
       let headerName = (this.configFull.authentication as IHeaderConfig).header;
       let user = (this.configFull.authentication as IHeaderConfig).user;
       this.requestConfig.headers[headerName] = user;
-      this.requestConfig.httpsAgent = generateHttpsAgent(
-        this.configFull.authentication,
-        false
-      );
+      // this.requestConfig.httpsAgent = generateHttpsAgent(
+      //   this.configFull.authentication,
+      //   false
+      // );
     }
   }
 
@@ -176,10 +180,10 @@ export class MakeRequest {
     if ((this.configFull.authentication as IJWTConfig).token) {
       let token = (this.configFull.authentication as IJWTConfig).token;
       this.requestConfig.headers["Authorization"] = `Bearer ${token}`;
-      this.requestConfig.httpsAgent = generateHttpsAgent(
-        this.configFull.authentication,
-        false
-      );
+      // this.requestConfig.httpsAgent = generateHttpsAgent(
+      //   this.configFull.authentication,
+      //   false
+      // );
     }
   }
 
@@ -190,13 +194,11 @@ export class MakeRequest {
         .sessionId;
       let cookieHeaderName = (this.configFull.authentication as ISessionConfig)
         .cookieHeaderName;
-      (this.requestConfig.headers[
-        "Cookie"
-      ] = `${cookieHeaderName}=${sessionId}`),
-        (this.requestConfig.httpsAgent = generateHttpsAgent(
-          this.configFull.authentication,
-          false
-        ));
+      this.requestConfig.headers["Cookie"] = `${cookieHeaderName}=${sessionId}`;
+      // (this.requestConfig.httpsAgent = generateHttpsAgent(
+      //   this.configFull.authentication,
+      //   false
+      // ));
     }
   }
 
@@ -204,7 +206,7 @@ export class MakeRequest {
     // set Qlik user header in the required format
     if ((this.configFull.authentication as any).user_name) {
       this.requestConfig.headers["X-Qlik-User"] = generateQlikUserHeader(
-        this.configFull.authentication as ICertCrtConfig
+        this.configFull.authentication as ICertUser
       );
     }
   }
@@ -216,10 +218,10 @@ export class MakeRequest {
         .ticket;
       this.qlikTicket = ticket;
 
-      this.requestConfig.httpsAgent = generateHttpsAgent(
-        this.configFull.authentication as ITicketConfig,
-        false
-      );
+      // this.requestConfig.httpsAgent = generateHttpsAgent(
+      //   this.configFull.authentication as ITicketConfig,
+      //   false
+      // );
     }
   }
 }

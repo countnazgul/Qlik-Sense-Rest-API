@@ -2,18 +2,19 @@
 
 import { AxiosResponse } from "axios";
 
-export interface ICertCrtConfig {
-  cert: string | Buffer;
-  key: string | Buffer;
+export interface ICertUser {
   user_dir?: string;
   user_name?: string;
 }
 
-export interface ICertPfxConfig {
-  pfx: string | Buffer;
-  user_dir?: string;
-  user_name?: string;
-}
+// export interface ICertCrtConfig extends ICertUser {
+//   cert: string | Buffer;
+//   key: string | Buffer;
+// }
+
+// export interface ICertPfxConfig extends ICertUser {
+//   pfx: string | Buffer;
+// }
 
 export interface IHeaderConfig {
   header: string;
@@ -40,13 +41,13 @@ export interface IConfig {
   notSecure?: boolean;
   headers?: string[];
   cookies?: string[];
+  httpsAgent?: any;
   authentication:
-    | ICertCrtConfig
-    | ICertPfxConfig
     | IHeaderConfig
     | IJWTConfig
     | ISessionConfig
-    | ITicketConfig;
+    | ITicketConfig
+    | ICertUser;
 }
 
 export interface IConfigFull extends IConfig {

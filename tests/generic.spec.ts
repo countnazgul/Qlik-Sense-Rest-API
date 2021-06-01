@@ -2,6 +2,7 @@ import path from "path";
 const dotEnvPath = path.resolve("./.env");
 require("dotenv").config({ path: dotEnvPath });
 import fs from "fs";
+import https from "https";
 
 import chai from "chai";
 const expect = chai.expect;
@@ -24,14 +25,32 @@ const crt = fs.readFileSync(`${process.env.TEST_CERT}/client.pem`);
 const key = fs.readFileSync(`${process.env.TEST_CERT}/client_key.pem`);
 const pfx = fs.readFileSync(`${process.env.TEST_CERT}/client.pfx`);
 
+const httpsAgentCert = new https.Agent({
+  rejectUnauthorized: false,
+  cert: crt,
+  key: key,
+});
+
+const httpsAgentPfx = new https.Agent({
+  rejectUnauthorized: false,
+  pfx: pfx,
+});
+
 let baseConfig: IConfig = {
   host: process.env.TEST_HOST,
   port: 4242,
-  //   proxy: "blah",
+  httpsAgent: httpsAgentCert,
   authentication: {
-    // cert: crt,
-    // key: key,
-    pfx: pfx,
+    user_dir: process.env.SENSE_USER_DIRECTORY,
+    user_name: process.env.SENSE_USER_NAME,
+  },
+};
+
+let baseConfigPxf: IConfig = {
+  host: process.env.TEST_HOST,
+  port: 4242,
+  httpsAgent: httpsAgentPfx,
+  authentication: {
     user_dir: process.env.SENSE_USER_DIRECTORY,
     user_name: process.env.SENSE_USER_NAME,
   },
@@ -71,7 +90,7 @@ let baseConfigTicket: IConfig = {
 
 describe("PLAYGROUND", function () {
   it("Test GET", async function () {
-    let repo = new QlikRepositoryClient(baseConfig);
+    let repo = new QlikRepositoryClient(baseConfigPxf);
     let result = await repo.Get("about").catch((e) => {
       let a = 1;
     });
