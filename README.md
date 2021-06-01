@@ -63,8 +63,8 @@ All requests are returning data in the following format:
 
 ```javascript
 {
-    data:  {} or [] // depends what Qlik is returning
-    status: number // HTTP status codes: 200, 201, 204, 404, 409 etc.
+    data:  {} or []    // depends what Qlik is returning
+    status: number     // HTTP status codes: 200, 201, 204, 404, 409 etc.
     statusText: string // HTTP status text: "OK", "Created", "No content" etc.
 }
 ```
@@ -80,12 +80,21 @@ The downside of this. When communicating with Qlik through the browser then:
 The following code demonstrates how to pass `httpsAgent`:
 
 ```javascript
+import fs from "fs";
+import https from "https";
+
+// read the certificates
+const crt = fs.readFileSync("path/to/certificate.pem");
+const key = fs.readFileSync("path/to/certificate_key.pem");
+
+// init https agent
 let httpsAgent = new https.Agent({
   rejectUnauthorized: false,
   cert: crt,
   key: key,
 });
 
+// create our config by passing the created httpAgent
 let config = {
   host: "my-qlik-sense-instance",
   port: 4242,
@@ -96,6 +105,7 @@ let config = {
   },
 };
 
+// use the config
 let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
 ```
@@ -182,15 +192,20 @@ let result = await repoClient.Get("about");
 - ## Proxy API
 
 ```javascript
+import https from "https";
 import { QlikProxyClient } from "../src/index";
 
 const pfx = fs.readFileSync("path/to/client.pfx");
 
+let httpsAgent = new https.Agent({
+  pfx: pfx,
+});
+
 let config = {
   host: "my-sense-host",
   port: 4243,
+  httpAgent: httpAgent,
   authentication: {
-    pfx: pfx,
     user_dir: "SOME_DIR",
     user_name: "SOME_USER",
   },
@@ -205,6 +220,7 @@ console.log(result.data.buildVersion);
 - ## Engine API
 
 ```javascript
+import https from "https";
 import { QlikEngineClient } from "../src/index";
 
 const pfx = fs.readFileSync("path/to/client.pfx");
@@ -212,8 +228,8 @@ const pfx = fs.readFileSync("path/to/client.pfx");
 let config = {
   host: "my-sense-host",
   port: 4747,
+  httpAgent: new https.Agent({ pfx: pfx }),
   authentication: {
-    pfx: pfx,
     user_dir: "SOME_DIR",
     user_name: "SOME_USER",
   },
@@ -227,6 +243,7 @@ let result = await engineClient.Get("engine/healthcheck");
   All other clients are adding the required service prefix automatically (for example `qrs`, `qps` and `api`). Some other REST request dont need prefix. In these cases the `Generic REST client` can be used. In general this client can be used as replacement for all other clients by adding the necessary prefix to the url
 
 ```javascript
+import https from "https";
 import { QlikGenericRestClient } from "../src/index";
 
 const pfx = fs.readFileSync("path/to/client.pfx");
@@ -234,8 +251,8 @@ const pfx = fs.readFileSync("path/to/client.pfx");
 let config = {
   host: "my-sense-host",
   port: 4747,
+  httpAgent: new https.Agent({ pfx: pfx }),
   authentication: {
-    pfx: pfx,
     user_dir: "SOME_DIR",
     user_name: "SOME_USER",
   },
