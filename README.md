@@ -11,7 +11,7 @@ Interact with Qlik Sense REST APIs (Repository, Proxy, Engine and SaaS) from a s
 [Motivation](#Motivation)
 [REST API Coverage](#REST-API-coverage)
 [Installation](#Installation)
-[Data]
+[Return data format](#Return-data-format)
 [Node vs Browser](#Node-vs-Browser)
 [Examples](#Examples)
 
@@ -42,7 +42,7 @@ Long(er) answer:
 - [x] Proxy (QSoW)
 - [x] Engine (QSoW)
 - [x] Generic (QSoW)
-- [ ] SaaS (QSoK) (next phase)
+- [ ] SaaS (QSoK) (TBA)
 - [ ] Engine JSON API through REST API (not guaranteed)
 
 ---
@@ -56,6 +56,18 @@ Long(er) answer:
 **Any "physical" content (like certificates, qvf files, extension files etc)
 have to be provided in advance.**
 The package communicates with Qlik only and will not read files from the file system. Its not its job ... and make life easier when the package is used in the browser :)
+
+## Return data format
+
+All requests are returning data in the following format:
+
+```javascript
+{
+    data:  {} or [] // depends what Qlik is returning
+    status: number // HTTP status codes: 200, 201, 204, 404, 409 etc.
+    statusText: string // HTTP status text: "OK", "Created", "No content" etc.
+}
+```
 
 ## Node vs Browser
 
@@ -86,13 +98,6 @@ let config = {
 
 let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
-
-// result variable is in format:
-// {
-//     data: {} or [] (depends what Qlik is returning)
-//     status: 200, 201, 204, 404, 409 etc.
-//     statusText: "OK", "Created", "No content" etc.
-// }
 ```
 
 ## Examples
@@ -246,7 +251,7 @@ let result = await genericClient.Get("engine/healthcheck");
 
 **This package is not performing authentication by itself!**
 
-- [x] Certificates
+- [x] Certificates (only in Node environment by providing `https.agent`)
 - [x] Header
 - [x] JWT
 - [x] Session
@@ -254,4 +259,4 @@ let result = await genericClient.Get("engine/healthcheck");
 
 ---
 
-Not affiliated with Qlik
+**NOT AFFILIATED WITH QLIK**
