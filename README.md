@@ -8,6 +8,24 @@ Interact with Qlik Sense REST APIs (Repository, Proxy, Engine and SaaS) from a s
 
 ---
 
+[Motivation](#Motivation)
+[REST API Coverage](#REST-API-coverage)
+[Installation](#Installation)
+[Data]
+[Node vs Browser](#Node-vs-Browser)
+[Examples](#Examples)
+
+- [Certificates authentication](#Certificates-authentication)
+- [Header authentication](#Header-authentication)
+- [JWT authentication](#JWT-authentication)
+- [Session authentication](#Session-authentication)
+- [Ticket authentication](#Ticket-authentication)
+- [Proxy API](#Proxy-API)
+- [Engine API](#Engine-API)
+- [Generic REST client](#Generic-REST-client)
+
+[Supported authentication methods](#Supported-authentication-methods)
+
 ## Motivation
 
 The short answer ... I needed it :D
@@ -37,33 +55,35 @@ Long(er) answer:
 
 **Any "physical" content (like certificates, qvf files, extension files etc)
 have to be provided in advance.**
-The package communicates with Qlik only and should not read files from the file system. Its not its job ... and make life easier when the package is used in the browser :)
+The package communicates with Qlik only and will not read files from the file system. Its not its job ... and make life easier when the package is used in the browser :)
 
-## Examples
+## Node vs Browser
 
-- Certificates authentication
+The package itself can be used from both environments (Node and Browser). The only difference is when using certificates authentication. In order to provide certificates the package accept additional parameter - `httpAgent`. This means that certificate authentication can be used only in Node environment.
+The downside of this. When communicating with Qlik through the browser then:
+
+- no certificate authentication
+- certificate errors can be ignored (for example self-signed or expired certificates)
+
+The following code demonstrates how to pass `httpsAgent`:
 
 ```javascript
-// certificates authentication example (pem or pfx)
-import { QlikRepositoryClient } from "../src/index";
-
-const crt = fs.readFileSync("path/to/client.pem");
-const key = fs.readFileSync("path/to/client_key.pem");
-const pfx = fs.readFileSync("path/to/client.pfx");
+let httpsAgent = new https.Agent({
+  rejectUnauthorized: false,
+  cert: crt,
+  key: key,
+});
 
 let config = {
-  host: "my-sense-host",
+  host: "my-qlik-sense-instance",
   port: 4242,
+  httpsAgent: httpsAgent,
   authentication: {
-    cert: crt,
-    key: key,
-    //pfx: pfx,
     user_dir: "SOME_DIR",
     user_name: "SOME_USER",
   },
 };
 
-// this is where the magic is happening
 let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
 
@@ -73,11 +93,15 @@ let result = await repoClient.Get("about");
 //     status: 200, 201, 204, 404, 409 etc.
 //     statusText: "OK", "Created", "No content" etc.
 // }
-
-console.log(result.data.buildVersion);
 ```
 
-- Header authentication
+## Examples
+
+- ## Certificates authentication
+
+  See the point above (`Node vs Browser`)
+
+- ## Header authentication
 
 ```javascript
 // header authentication
@@ -96,7 +120,7 @@ let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
 ```
 
-- JWT authentication
+- ## JWT authentication
 
 ```javascript
 // JWT authentication
@@ -114,7 +138,7 @@ let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
 ```
 
-- Session authentication
+- ## Session authentication
 
 ```javascript
 // Session authentication
@@ -133,7 +157,7 @@ let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
 ```
 
-- Ticket authentication
+- ## Ticket authentication
 
 ```javascript
 // Ticket authentication
@@ -150,7 +174,7 @@ let repoClient = new QlikRepositoryClient(config);
 let result = await repoClient.Get("about");
 ```
 
-- Proxy API
+- ## Proxy API
 
 ```javascript
 import { QlikProxyClient } from "../src/index";
@@ -173,7 +197,7 @@ let result = await proxyClient.Get("session");
 console.log(result.data.buildVersion);
 ```
 
-- Engine API
+- ## Engine API
 
 ```javascript
 import { QlikEngineClient } from "../src/index";
@@ -194,7 +218,8 @@ let engineClient = new QlikProxyClient(config);
 let result = await engineClient.Get("engine/healthcheck");
 ```
 
-- Generic REST client - all other clients are adding the required service prefix automatically (for example `qrs`, `qps` and `api`). Some other REST request dont need prefix. In these cases the `Generic REST client` can be used. In general this client can be used as replacement for all other clients by adding the necessary prefix to the url
+- ## Generic REST client
+  All other clients are adding the required service prefix automatically (for example `qrs`, `qps` and `api`). Some other REST request dont need prefix. In these cases the `Generic REST client` can be used. In general this client can be used as replacement for all other clients by adding the necessary prefix to the url
 
 ```javascript
 import { QlikGenericRestClient } from "../src/index";
