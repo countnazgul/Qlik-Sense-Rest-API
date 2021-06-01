@@ -114,7 +114,7 @@ let result = await repoClient.Get("about");
 
 - ## Certificates authentication
 
-  See the point above (`Node vs Browser`)
+  See [Node vs Browser](#Node-vs-Browser)
 
 - ## Header authentication
 
