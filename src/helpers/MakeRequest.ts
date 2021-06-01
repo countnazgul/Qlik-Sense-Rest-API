@@ -18,7 +18,6 @@ import axios, {
 } from "axios";
 
 import {
-  // generateHttpsAgent,
   generateQlikUserHeader,
   generateXrfkey,
   setURLXrfKey,
@@ -149,17 +148,6 @@ export class MakeRequest {
   private SetHttpsAgent() {
     if (this.configFull.httpsAgent)
       this.requestConfig.httpsAgent = this.configFull.httpsAgent;
-
-    // // if certificates authentication
-    // if (
-    //   (this.configFull.authentication as ICertCrtConfig).cert ||
-    //   (this.configFull.authentication as ICertPfxConfig).pfx
-    // ) {
-    //   this.requestConfig.httpsAgent = generateHttpsAgent(
-    //     this.configFull.authentication as ICertCrtConfig | ICertPfxConfig,
-    //     true
-    //   );
-    // }
   }
 
   private SetHeader() {
@@ -168,10 +156,6 @@ export class MakeRequest {
       let headerName = (this.configFull.authentication as IHeaderConfig).header;
       let user = (this.configFull.authentication as IHeaderConfig).user;
       this.requestConfig.headers[headerName] = user;
-      // this.requestConfig.httpsAgent = generateHttpsAgent(
-      //   this.configFull.authentication,
-      //   false
-      // );
     }
   }
 
@@ -180,10 +164,6 @@ export class MakeRequest {
     if ((this.configFull.authentication as IJWTConfig).token) {
       let token = (this.configFull.authentication as IJWTConfig).token;
       this.requestConfig.headers["Authorization"] = `Bearer ${token}`;
-      // this.requestConfig.httpsAgent = generateHttpsAgent(
-      //   this.configFull.authentication,
-      //   false
-      // );
     }
   }
 
@@ -195,10 +175,6 @@ export class MakeRequest {
       let cookieHeaderName = (this.configFull.authentication as ISessionConfig)
         .cookieHeaderName;
       this.requestConfig.headers["Cookie"] = `${cookieHeaderName}=${sessionId}`;
-      // (this.requestConfig.httpsAgent = generateHttpsAgent(
-      //   this.configFull.authentication,
-      //   false
-      // ));
     }
   }
 
@@ -217,11 +193,6 @@ export class MakeRequest {
       let ticket: string = (this.configFull.authentication as ITicketConfig)
         .ticket;
       this.qlikTicket = ticket;
-
-      // this.requestConfig.httpsAgent = generateHttpsAgent(
-      //   this.configFull.authentication as ITicketConfig,
-      //   false
-      // );
     }
   }
 }

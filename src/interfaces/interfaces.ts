@@ -1,20 +1,9 @@
-//   user?: `${string}\\${string}`;
-
 import { AxiosResponse } from "axios";
 
 export interface ICertUser {
   user_dir?: string;
   user_name?: string;
 }
-
-// export interface ICertCrtConfig extends ICertUser {
-//   cert: string | Buffer;
-//   key: string | Buffer;
-// }
-
-// export interface ICertPfxConfig extends ICertUser {
-//   pfx: string | Buffer;
-// }
 
 export interface IHeaderConfig {
   header: string;
