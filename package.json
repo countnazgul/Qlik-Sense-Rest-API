@@ -1,6 +1,6 @@
 {
   "name": "qlik-rest-api",
-  "version": "0.6.4-beta.0",
+  "version": "0.6.4-beta.2",
   "description": "Interact with multiple Qlik Sense REST APIs",
   "author": {
     "email": "stefan.stoichev@gmail.com",
