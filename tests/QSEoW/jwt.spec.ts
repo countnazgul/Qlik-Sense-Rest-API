@@ -4,14 +4,10 @@ import { Util, TagOperations } from "../../tests/util";
 const expect = chai.expect;
 const util = new Util();
 
-import {
-  //   QlikEngineClient,
-  //   QlikGenericRestClient,
-  //   QlikProxyClient,
-  QlikRepositoryClient,
-} from "../../src/index";
+import { QlikRepositoryClient } from "../../src/index";
 
 describe("QSEoW (JWT)", function () {
+  this.timeout(30000);
   it("Repository (JWT) - DELETE, GET, POST and PUT (Tag)", async function () {
     const repo = new QlikRepositoryClient(util.baseConfigJWT);
 
@@ -25,7 +21,7 @@ describe("QSEoW (JWT)", function () {
 
     expect(newTagData.status).to.be.eq(201) &&
       expect(getTagData.status).to.be.eq(200) &&
-      expect(getTagData.data.id).to.be.eq(newTagData.data.id) &&
+      expect(getTagData.data[0].id).to.be.eq(newTagData.data.id) &&
       expect(updateTagData.status).to.be.eq(200) &&
       expect(updateTagData.data.name).to.be.eq(tagOperations.tagNewName) &&
       expect(deleteTagData.status).to.be.eq(204);

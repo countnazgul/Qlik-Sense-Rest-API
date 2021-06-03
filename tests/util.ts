@@ -41,6 +41,10 @@ export class Util {
         rejectUnauthorized: false,
       });
 
+      this.httpsAgentSelfSigned = new https.Agent({
+        rejectUnauthorized: false,
+      });
+
       return true;
     }
 
@@ -104,7 +108,7 @@ export class Util {
     this.baseConfigJWT = {
       host: process.env.TEST_HOST,
       proxy: process.env.AUTH_JWT_PROXY,
-      httpsAgent: this.httpsAgentCert,
+      httpsAgent: this.httpsAgentSelfSigned,
       authentication: {
         token: process.env.AUTH_JWT_TOKEN,
       },
@@ -112,7 +116,7 @@ export class Util {
 
     this.baseConfigSession = {
       host: process.env.TEST_HOST,
-      httpsAgent: this.httpsAgentCert,
+      httpsAgent: this.httpsAgentSelfSigned,
       authentication: {
         sessionId: "",
         cookieHeaderName: "X-Qlik-Session",
@@ -121,7 +125,7 @@ export class Util {
 
     this.baseConfigTicket = {
       host: process.env.TEST_HOST,
-      httpsAgent: this.httpsAgentCert,
+      httpsAgent: this.httpsAgentSelfSigned,
       authentication: {
         ticket: "",
       },
@@ -145,7 +149,7 @@ export class TagOperations {
   async run() {
     let newTagData = await this.newTag();
     let getTagData = await this.getTagInfo(newTagData.data.id);
-    let updateTagData = await this.updateTag(newTagData);
+    let updateTagData = await this.updateTag(getTagData);
     let deleteTagData = await this.deleteTag(newTagData.data.id);
 
     return {
@@ -156,7 +160,7 @@ export class TagOperations {
     };
   }
 
-  private async newTag(): Promise<IHttpReturn> {
+  async newTag(): Promise<IHttpReturn> {
     return await this.repoClient.Post(`tag`, {
       name: this.tagName,
     });
