@@ -30,7 +30,7 @@ describe("QSEoW (Certificates)", function () {
 
     expect(newTagData.status).to.be.eq(201) &&
       expect(getTagData.status).to.be.eq(200) &&
-      expect(getTagData.data.id).to.be.eq(newTagData.data.id) &&
+      expect(getTagData.data[0].id).to.be.eq(newTagData.data.id) &&
       expect(updateTagData.status).to.be.eq(200) &&
       expect(updateTagData.data.name).to.be.eq(tagOperations.tagNewName) &&
       expect(deleteTagData.status).to.be.eq(204);
@@ -51,8 +51,8 @@ describe("QSEoW (Certificates)", function () {
 
     expect(newSessionData.status).to.be.eq(201) &&
       expect(getSessionData.status).to.be.eq(200) &&
-      expect(getSessionData.data.id).to.be.eq("") &&
-      expect(deleteSessionData.status).to.be.eq(204);
+      expect(getSessionData.data.id).to.be.undefined &&
+      expect(deleteSessionData.status).to.be.eq(200);
   });
 
   it("Engine (Certificates) - GET (Healthcheck)", async function () {
