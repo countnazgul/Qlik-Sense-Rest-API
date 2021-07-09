@@ -3,7 +3,7 @@ import { QlikGenericRestClient } from "./clients/Generic";
 import { QlikProxyClient } from "./clients/Proxy";
 import { QlikRepositoryClient } from "./clients/Repository";
 import { QlikSaaSClient } from "./clients/Saas";
-import { IHttpReturn } from "./interfaces/interfaces";
+import { IHttpReturn, IConfig } from "./interfaces/interfaces";
 
 export {
   QlikEngineClient,
@@ -12,4 +12,5 @@ export {
   QlikRepositoryClient,
   QlikSaaSClient,
   IHttpReturn,
+  IConfig,
 };

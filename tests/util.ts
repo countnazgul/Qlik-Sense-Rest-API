@@ -216,6 +216,10 @@ export class ProxySessionOperation {
     return await this.proxyClient.Get(`session/${sessionId}`);
   }
 
+  async getSessionAll() {
+    return await this.proxyClient.Get(`session`);
+  }
+
   async deleteSession(sessionId: string) {
     return await this.proxyClient.Delete(`session/${sessionId}`);
   }

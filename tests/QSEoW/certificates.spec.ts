@@ -17,6 +17,7 @@ import {
 } from "../../src/index";
 
 describe("QSEoW (Certificates)", function () {
+  this.timeout(30000);
   it("Repository (Certificates) - DELETE, GET, POST and PUT (Tag)", async function () {
     const repo = new QlikRepositoryClient(util.baseConfig);
 
@@ -53,6 +54,18 @@ describe("QSEoW (Certificates)", function () {
       expect(getSessionData.status).to.be.eq(200) &&
       expect(getSessionData.data.id).to.be.undefined &&
       expect(deleteSessionData.status).to.be.eq(200);
+  });
+
+  it("Proxy (Certificates) - GET (Sessions)", async function () {
+    let localConfig = { ...util.baseConfig };
+    localConfig.port = 4243;
+
+    const proxy = new QlikProxyClient(localConfig);
+
+    const proxyOperations = new ProxySessionOperation(proxy);
+    const sessions = await proxyOperations.getSessionAll();
+
+    expect(sessions.status).to.be.eq(201);
   });
 
   it("Engine (Certificates) - GET (Healthcheck)", async function () {

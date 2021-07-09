@@ -3,9 +3,9 @@
   "version": "1.0.1",
   "description": "Interact with multiple Qlik Sense REST APIs",
   "author": {
-    "email": "stefan.stoichev@gmail.com",
-    "name": "Stefan Stoichev @countnazgul",
-    "url": "https://sstoichev.eu"
+    "email": "info@informatiqal.com",
+    "name": "Informatiqal @informatiqal",
+    "url": "https://informatiqal.com"
   },
   "license": "MIT",
   "main": "dist/index.js",
